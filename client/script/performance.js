@@ -1,8 +1,12 @@
 "use strict";
 
-const bitcoinStream = new Stream(null, 3333, true);
-const ethereumStream = new Stream(null, 3334, true);
-const litecoinStream = new Stream(null, 3335, true);
+const BTC_PORT = 3333;
+const ETH_PORT = 3334;
+const LTC_PORT = 3335;
+
+const bitcoinStream = new Stream(null, BTC_PORT, true);
+const ethereumStream = new Stream(null, ETH_PORT, true);
+const litecoinStream = new Stream(null, LTC_PORT, true);
 
 bitcoinStream.connect();
 ethereumStream.connect();

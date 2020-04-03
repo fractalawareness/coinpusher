@@ -1,0 +1,25 @@
+version: '3.7'
+
+services:
+  server:
+    container_name: coinpusher-server
+    image: coinpusher-server
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - WORKDIR=${WORKDIR}
+        - NETS_LOCATION=${NETS_LOCATION}
+        - STREAMS_LOCATION=${STREAMS_LOCATION}
+        - SERVER_PORT=${SERVER_PORT}
+        - BTC_PORT=${BTC_PORT}
+        - ETH_PORT=${ETH_PORT}
+        - LTC_PORT=${LTC_PORT}
+    volumes:
+      - ./${NETS_LOCATION}:${WORKDIR}/${NETS_LOCATION}
+      - ./${STREAMS_LOCATION}:${WORKDIR}/${STREAMS_LOCATION}
+    ports:
+      - ${SERVER_PORT}:${SERVER_PORT}
+      - ${BTC_PORT}:${BTC_PORT}
+      - ${ETH_PORT}:${ETH_PORT}
+      - ${LTC_PORT}:${LTC_PORT}

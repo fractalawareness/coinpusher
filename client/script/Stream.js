@@ -1,8 +1,10 @@
 "use strict";
 
+const BTC_PORT = 3333;
+
 class Stream {
 
-    constructor(url = null, port = 3333, performanceOnly = false){
+    constructor(url = null, port = BTC_PORT, performanceOnly = false){
 
         this.url = url || this.getUrl(port);
         this.performanceOnly = performanceOnly;
@@ -20,33 +22,33 @@ class Stream {
 
     getUrl(port){
         const location = window.location;
-        return location.protocol === "https:" ? "wss:" : "ws:" + "//" 
-            + location.hostname + ":" + port;       
+        return location.protocol === "https:" ? "wss:" : "ws:" + "//"
+            + location.hostname + ":" + port;
     }
 
     connect(){
 
         console.log("connecting..");
         this.connection = new WebSocket(this.url);
-        
+
         this.connection.onopen = () => {
             console.log("connected.");
             this.connection.send(JSON.stringify({message: "hi"}));
         };
-        
+
         this.connection.onerror = error => {
             console.error(error);
         };
-        
+
         this.connection.onmessage = message => {
-            
+
             let data = message.data;
             try {
                 data = JSON.parse(data);
             } catch(error){
                 return console.error("failed to parse message", data, error);
             }
-        
+
             if(data.trade){
                 return this._onTrade(data.currency, data);
             }
@@ -68,7 +70,7 @@ class Stream {
             if(data.performance){
                 return this._onPerformance(data.currency, data.performance);
             }
-        
+
             console.warn("unknown message", data);
         };
     }
@@ -123,7 +125,7 @@ class Stream {
     //will only return true, if unix timestamp is higher than set for currency
     checkIfPredictionDrawable(currency, unix){
         unix = parseInt(unix);
-        
+
         if(!this.predictionDraw[currency]){
             this.predictionDraw[currency] = unix;
             return true;
@@ -136,9 +138,9 @@ class Stream {
             }
         }
     }
-    
+
     _onTrade(currency, {trade, predicted}){
-        
+
         if(!trade || this.performanceOnly){
             return;
         }
@@ -196,7 +198,7 @@ class Stream {
             plotter.updatePlot({
                 x: [datetime],
                 y: [trade.price]
-            }, 
+            },
             pred
             ).catch(error => {
                 console.error("failed to update plot", error);
@@ -229,7 +231,7 @@ class Stream {
         }
 
         this._getOrCreatePerformancePlotter("performance").then(plotter => {
-            
+
             const data = {
                 x: [this.convertTimestamp(timestamp)],
                 y: [reality]
@@ -237,7 +239,7 @@ class Stream {
 
             switch(currency){
 
-                case "btceur": 
+                case "btceur":
                     plotter.updatePerformancePlot(data, 0);
                 break;
 
