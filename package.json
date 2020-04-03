@@ -19,7 +19,7 @@
     "express": "^4.15.4",
     "moment": "^2.18.1",
     "neataptic": "^1.4.4",
-    "node-bitstamp": "^1.1.1",
+    "node-bitstamp": "1.7.0",
     "synaptic": "^1.1.2",
     "uuid": "^3.1.0",
     "uws": "^8.14.1"
